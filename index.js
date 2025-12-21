@@ -112,10 +112,10 @@ function createCup(x, y, scale = 0.1) {
 
 // Game objects
 const cups = [
-  createCup(155, 250),
-  createCup(185, 250),
-  createCup(215, 250),
-  createCup(245, 250),
+  createCup(455, 250),
+  createCup(485, 250),
+  createCup(515, 250),
+  createCup(545, 250),
 
 ]
 
@@ -249,15 +249,15 @@ function render() {
 
   drawGround();
 
-  drawSprite(sprites.maker, 130, 140, 0.4);
-  drawSprite(sprites.stand, 50, 50, 0.5);
-  drawSprite(sprites.ice, 250, 190, 0.125);
+  drawSprite(sprites.maker, 430, 140, 0.4);
+  drawSprite(sprites.stand, 350, 50, 0.5);
+  drawSprite(sprites.ice, 550, 190, 0.125);
 
 
   // Draw all cup instances
   cups.forEach(cup => drawInstance(cup));
 
-  drawSprite(sprites.lemons, 60, 220, 0.1);
+  drawSprite(sprites.lemons, 360, 220, 0.1);
 
 }
 
