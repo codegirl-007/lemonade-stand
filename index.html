@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Lemonade Stand</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <header class="game_header">
+    <img src="juice.png" class="game_header_icon">
+    <h1 class="game_header_title">Lemonade Stand</h1>
+  </header>
+
+  <div class="dashboard">
+    <section class="game_section">
+      <h2 class="section_title">Supplies</h2>
+
+      <ul class="game_list">
+        <li>Lemons: </li>
+        <li>Sugar: </li>
+        <li>Ice: </li>
+        <li>Cups: </li>
+      </ul>
+    </section>
+
+    <section class="game_section">
+      <h2 class="section_title">Total Earnings</h2>
+
+      <p>$0.00</p>
+    </section>
+
+
+    <section class="game_section">
+      <h2 class="section_title">Current Price</h2>
+
+      <p>$0.00</p>
+    </section>
+
+    <section class="game_section">
+      <h2 class="section_title">Weather</h2>
+
+      <p>Today's weather is: </p>
+    </section>
+  </div>
+
+  <canvas id="scene" width="1200" height="500"></canvas>
+  <script src="index.js"></script>
+</body>
+
+</html>

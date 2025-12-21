@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+body {
+  background: linear-gradient(180deg, #cfefff 0%, #f7ffe5 100%);
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+.game_header {
+  display: flex;
+  margin: 0 auto;
+  width: 500px;
+  align-items: center;
+}
+
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.game_header_title {
+  font-family: 'Fredoka', cursive;
+  font-size: 54px;
+  color: #FDB813;
+  text-shadow: 3px 3px 0px #3f7a33;
+  letter-spacing: 1px;
+}
+
+.game_header_icon {
+  height: 64px;
+}
+
+.game_section {
+  background-color: #FFF9E6;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 4px solid #8fd16a;
+  border-radius: 20px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  color: #7A6146;
+}
+
+.game_list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.section_title {
+  font-family: 'Fredoka', sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #5C4632;
+  letter-spacing: 1px;
+}
+
+canvas {
+  width: 1200px;
+  height: 500px;
+  margin: 0 auto;
+  display: block;
+  pointer-events: none;
+}
