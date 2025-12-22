@@ -66,11 +66,23 @@ const sprites = {
   ice: createSprite({
     source: 'ice.png'
   }),
+  pitcher: createSprite({
+    source: 'pitcher_full.png'
+  }),
   lemons: createSprite({
     source: 'lemons.png'
   }),
   grass: createSprite({
     source: 'grass.png'
+  }),
+  tree: createSprite({
+    source: 'tree.png'
+  }),
+  slide: createSprite({
+    source: 'slide.png'
+  }),
+  seesaw: createSprite({
+    source: 'seesaw.png'
   })
 };
 
@@ -112,10 +124,10 @@ function createCup(x, y, scale = 0.1) {
 
 // Game objects
 const cups = [
-  createCup(455, 250),
-  createCup(485, 250),
-  createCup(515, 250),
-  createCup(545, 250),
+  createCup(455, 325, 0.15),
+  createCup(495, 325, 0.15),
+  createCup(535, 325, 0.15),
+  createCup(575, 325, 0.15),
 
 ]
 
@@ -237,27 +249,53 @@ function drawInstance(instance) {
 function drawGround() {
   if (!sprites.grass.ready) return;
 
-  const pattern = ctx.createPattern(sprites.grass.image, 'repeat')
+  const pattern = ctx.createPattern(sprites.grass.image, 'repeat');
   ctx.fillStyle = pattern;
 
   const groundHeight = 250;
-  ctx.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight)
+  ctx.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight);
+}
+
+/**
+ * Draws an oval shadow.
+ *
+ * @param {number} x - Center x position
+ * @param {number} y - Center y position
+ * @param {number} radiusX - Horizontal radius
+ * @param {number} radiusY - Vertical radius
+ * @param {string} [color='rgba(0, 0, 0, 0.25)'] - Shadow color
+ */
+function drawShadow(x, y, radiusX, radiusY, color = 'rgba(0, 0, 0, 0.3)') {
+  ctx.beginPath();
+  ctx.ellipse(x, y, radiusX, radiusY, 0, 0, Math.PI * 2);
+  ctx.fillStyle = color;
+  ctx.fill();
 }
 
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   drawGround();
+  drawSprite(sprites.tree, 600, 50, 0.25);
+  drawSprite(sprites.tree, 200, 50, 0.2);
 
-  drawSprite(sprites.maker, 430, 140, 0.4);
-  drawSprite(sprites.stand, 350, 50, 0.5);
-  drawSprite(sprites.ice, 550, 190, 0.125);
+  // Slide on the right
+  drawSprite(sprites.slide, 880, 80, 0.4);
+
+  // Seesaw
+  drawSprite(sprites.seesaw, 200, 280, 0.30);
+
+
+  // Shadow under the stand
+  drawShadow(500, 360, 180, 50);
+
+  drawSprite(sprites.maker, 430, 160, 0.6);
+  drawSprite(sprites.stand, 350, 50, 0.7);
+  drawSprite(sprites.pitcher, 620, 290, 0.3);
 
 
   // Draw all cup instances
   cups.forEach(cup => drawInstance(cup));
-
-  drawSprite(sprites.lemons, 360, 220, 0.1);
 
 }
 
@@ -268,5 +306,4 @@ setTimeout(() => {
   cups[0].fill();
   sprites.maker.frameIndex = 1;
   render();
-
 }, 1000);

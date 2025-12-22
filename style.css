@@ -64,3 +64,30 @@ canvas {
   display: block;
   pointer-events: none;
 }
+
+.go-shopping-btn {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  background: linear-gradient(180deg, #FDB813 0%, #f5a800 100%);
+  color: #5C4632;
+  border: 3px solid #3f7a33;
+  border-radius: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #3f7a33;
+  transition: all 0.1s ease;
+  margin: 12px auto 0;
+  display: block;
+}
+
+.go-shopping-btn:hover {
+  background: linear-gradient(180deg, #ffe066 0%, #FDB813 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #3f7a33;
+}
+
+.go-shopping-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #3f7a33;
+}
