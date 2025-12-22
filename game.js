@@ -28,10 +28,10 @@ export const Days = Object.freeze({
  * @type {Object.<string, number>}
  */
 const WeatherFactor = {
-  COLD: 0.5,
-  CLOUDY: 0.8,
-  SUNNY: 1.0,
-  HOT: 1.4
+  cold: 0.5,
+  cloudy: 0.8,
+  sunny: 1.0,
+  hot: 1.4
 }
 
 /**
@@ -40,10 +40,10 @@ const WeatherFactor = {
  * @type {Object.<string, number>}
  */
 const IdealPrice = {
-  COLD: 0.20,
-  CLOUDY: 0.30,
-  SUNNY: 0.35,
-  HOT: 0.50
+  cold: 0.20,
+  cloudy: 0.30,
+  sunny: 0.35,
+  hot: 0.50
 }
 
 /**
@@ -52,22 +52,22 @@ const IdealPrice = {
  * @type {Object.<string, {lemons: number, sugar: number, ice: number}>}
  */
 const IdealRecipe = {
-  COLD: {
+  cold: {
     lemons: 1,
     sugar: 2,
     ice: 1
   },
-  CLOUDY: {
+  cloudy: {
     lemons: 1,
     sugar: 1,
     ice: 2
   },
-  SUNNY: {
+  sunny: {
     lemons: 1,
     sugar: 1,
     ice: 3
   },
-  HOT: {
+  hot: {
     lemons: 1,
     sugar: 1,
     ice: 4
@@ -119,7 +119,6 @@ const WeatherChance = [
  *   ice: PriceTable,
  *   cups: PriceTable
  * }} supplies_prices
- * @property {number} cost_per_cup
  * @property {number} cups_sold
  */
 
@@ -144,7 +143,7 @@ export function init_game() {
       cups: 0
     },
     weather: Weather.SUNNY,
-    price_per_cup: 0,
+    price_per_cup: 1.00,
     days: Days[7],
     supplies_prices: {
       lemons: {
@@ -168,7 +167,6 @@ export function init_game() {
         400: 3.75
       }
     },
-    cost_per_cup: 1.00,
     cups_sold: 0
   }
 }
@@ -250,12 +248,12 @@ export function set_days(game_state, days) {
  * @param {number} cost - The price to charge per cup.
  * @returns {GameState} A new game state with the updated cost per cup.
  */
-export function set_cost_per_cup(game_state, cost) {
+export function set_price_per_cup(game_state, cost) {
   console.assert(typeof cost === 'number', 'cost must be a number');
   console.assert(game_state, 'game_state must be defined');
   return {
     ...game_state,
-    cost_per_cup: Math.round(parseFloat(cost) * 100) / 100
+    price_per_cup: Math.round(parseFloat(cost) * 100) / 100
   }
 }
 
@@ -304,38 +302,16 @@ export function calculate_taste_score(lemons_per_cup, sugar_per_cup, ideal_lemon
 
   let score = 1.0;
 
-  score -= (lemon_diff * 0.3 + sugar_diff * 0.2);
+  if (lemon_diff === 0 && sugar_diff === 0) {
+    score += 0.2; // perfect recipe bonus
+  } else {
+    score -= (lemon_diff * 0.3 + sugar_diff * 0.2);
+  }
 
   if (score < 0.5) score = 0.5;
   if (score > 1.2) score = 1.2;
 
   return score;
-}
-
-/**
- * Simulate a single day of lemonade sales.
- * Calculates cups sold based on recipe quality, weather, and pricing.
- *
- * @param {GameState} game_state - The current game state.
- * @returns {number} The number of cups sold during the day.
- */
-export function simulate_day(game_state) {
-  console.assert(game_state, 'game_state must not be undefined');
-
-  const recipe = game_state.recipe;
-  const weather = game_state.weather;
-  const supplies = game_state.supplies;
-
-  const taste_score = calculate_taste_score(
-    recipe.lemons,
-    recipe.sugar,
-    IdealRecipe[weather].lemons,
-    IdealRecipe[weather].sugar,
-  );
-
-  const cups_sold = calculate_cups_sold(game_state.cost_per_cup, supplies.cups, weather, taste_score);
-
-  return cups_sold;
 }
 
 /**
@@ -362,9 +338,9 @@ export function make_lemonade(game_state) {
   );
 
   const cups_available = Math.min(
-    game_state.supplies.lemons / recipe.lemons || 0,
-    game_state.supplies.sugar / recipe.sugar || 0,
-    game_state.supplies.ice / recipe.ice || 0,
+    recipe.lemons > 0 ? game_state.supplies.lemons / recipe.lemons : 0,
+    recipe.sugar > 0 ? game_state.supplies.sugar / recipe.sugar : 0,
+    recipe.ice > 0 ? game_state.supplies.ice / recipe.ice : 0,
     game_state.supplies.cups
   );
 
@@ -377,8 +353,7 @@ export function make_lemonade(game_state) {
     cups: game_state.supplies.cups - cups_sold
   }
 
-  const cost_per_cup = game_state.cost_per_cup;
-  const profit = (price - cost_per_cup) * cups_sold;
+  const profit = price * cups_sold;
 
   return {
     ...game_state,
