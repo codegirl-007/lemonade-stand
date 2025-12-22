@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "types": ["jest"]
+  },
+  "exclude": ["node_modules"]
+}
+

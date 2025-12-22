@@ -1,0 +1,13 @@
+{
+  "name": "lemonade",
+  "version": "1.0.0",
+  "description": "A lemonade stand game",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.2.0"
+  }
+}
