@@ -20,13 +20,13 @@
       <h2 class="section_title">Supplies</h2>
 
       <ul class="game_list">
-        <li>Lemons: </li>
-        <li>Sugar: </li>
-        <li>Ice: </li>
-        <li>Cups: </li>
+        <li>Lemons: <span data-bind="supplies.lemons"></span></li>
+        <li>Sugar: <span data-bind="supplies.sugar"></span></li>
+        <li>Ice: <span data-bind="supplies.ice"></span></li>
+        <li>Cups: <span data-bind="supplies.cups"></span></li>
       </ul>
 
-      <button class="go-shopping-btn">Go shopping</button>
+      <button class="go_shopping_btn">Go shopping</button>
     </section>
 
     <section class="game_section">
@@ -39,7 +39,9 @@
     <section class="game_section">
       <h2 class="section_title">Current Price</h2>
 
-      <p>$0.00</p>
+      <p data-bind="cost_per_cup" data-format="currency"></p>
+
+      <button class="change_price_button">Change Price</button>
     </section>
 
     <section class="game_section">
@@ -47,6 +49,54 @@
 
       <p>Today's weather is: </p>
     </section>
+  </div>
+
+  <div class="shopping_modal">
+    <div class="shopping_modal_content">
+      <div class="shopping_modal_header">
+        <h2 class="shopping_modal_title">Shop for Supplies</h2>
+        <button class="shopping_modal_close">&times;</button>
+      </div>
+      <div class="shopping_modal_body">
+        <div class="shop_item">
+          <span class="shop_item_name">Lemons</span>
+          <span class="shop_item_price">$4.80 / 12</span>
+          <button class="shop_item_btn">Buy</button>
+        </div>
+        <div class="shop_item">
+          <span class="shop_item_name">Sugar</span>
+          <span class="shop_item_price">$4.80 / 12</span>
+          <button class="shop_item_btn">Buy</button>
+        </div>
+        <div class="shop_item">
+          <span class="shop_item_name">Ice</span>
+          <span class="shop_item_price">$1.00 / 50</span>
+          <button class="shop_item_btn">Buy</button>
+        </div>
+        <div class="shop_item">
+          <span class="shop_item_name">Cups</span>
+          <span class="shop_item_price">$1.00 / 75</span>
+          <button class="shop_item_btn">Buy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="price_change_modal">
+    <div class="price_change_modal_content">
+      <div class="price_change_modal_header">
+        <h2 class="price_change_modal_title">Set Your Price</h2>
+        <button class="price_change_modal_close">&times;</button>
+      </div>
+      <div class="price_change_modal_body">
+        <p class="price_change_hint">Choose how much to charge per cup of lemonade.</p>
+        <div class="price_input_group">
+          <span class="price_currency">$</span>
+          <input type="number" class="price_input" min="0.01" max="9.99" step="0.01" value="0.25">
+        </div>
+        <button class="price_change_save_btn">Save Price</button>
+      </div>
+    </div>
   </div>
 
   <canvas id="scene" width="1200" height="500"></canvas>
