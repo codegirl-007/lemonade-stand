@@ -3,8 +3,13 @@
  * Handles sprite loading and canvas rendering.
  */
 
+import { init_game, make_lemonade, set_recipe, set_weather, Weather } from './game.js';
+
 /** @type {HTMLCanvasElement} */
 const canvas = document.getElementById('scene');
+
+// Initialize game state
+let gameState = init_game();
 
 /** @type {CanvasRenderingContext2D} */
 const ctx = canvas.getContext('2d');

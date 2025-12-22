@@ -3,7 +3,7 @@
  * @readonly
  * @enum {string}
  */
-const Weather = Object.freeze({
+export const Weather = Object.freeze({
   COLD: 'cold',
   CLOUDY: 'cloudy',
   SUNNY: 'sunny',
@@ -16,7 +16,7 @@ const Weather = Object.freeze({
  * @readonly
  * @enum {number|string}
  */
-const Days = Object.freeze({
+export const Days = Object.freeze({
   7: 7,
   14: 14,
   30: 30
@@ -129,7 +129,7 @@ const WeatherChance = [
  *
  * @returns {GameState} A fresh game state ready to begin.
  */
-function init_game() {
+export function init_game() {
   return {
     player_money: 0,
     recipe: {
@@ -183,7 +183,7 @@ function init_game() {
  * @param {number} ice - The amount of ice per cup.
  * @returns {GameState} A new game state with the updated recipe.
  */
-function set_recipe(game_state, lemons, sugar, ice) {
+export function set_recipe(game_state, lemons, sugar, ice) {
   console.assert(game_state, 'game_state must be defined');
   console.assert(typeof lemons == 'number', 'lemons must be a number');
   console.assert(typeof sugar == 'number', 'sugar must be a number');
@@ -207,7 +207,7 @@ function set_recipe(game_state, lemons, sugar, ice) {
  * @param {GameState} game_state - The current state of the game.
  * @returns {GameState} A new game state with the updated weather.
  */
-function set_weather(game_state) {
+export function set_weather(game_state) {
   const totalWeight = WeatherChance.reduce((sum, w) => sum + w.weight, 0);
   let roll = Math.random() * totalWeight;
 
@@ -231,7 +231,7 @@ function set_weather(game_state) {
  * @param {number} days - The number of days (7, 14, or 30).
  * @returns {GameState} A new game state with the updated number of days.
  */
-function set_days(game_state, days) {
+export function set_days(game_state, days) {
   console.assert(game_state, 'game_state must be defined');
   console.assert(typeof days === 'number', 'days must be a number');
   console.assert(Object.values(Days).includes(days), 'invalid days value');
@@ -250,7 +250,7 @@ function set_days(game_state, days) {
  * @param {number} cost - The price to charge per cup.
  * @returns {GameState} A new game state with the updated cost per cup.
  */
-function set_cost_per_cup(game_state, cost) {
+export function set_cost_per_cup(game_state, cost) {
   console.assert(typeof cost === 'number', 'cost must be a number');
   console.assert(game_state, 'game_state must be defined');
   return {
@@ -269,7 +269,7 @@ function set_cost_per_cup(game_state, cost) {
  * @param {number} [tasteScore=1] - The taste quality score (0.5 to 1.2).
  * @returns {number} The number of cups sold (capped by available supplies).
  */
-function calculate_cups_sold(price_per_cup, cups_in_supplies, weather, tasteScore = 1) {
+export function calculate_cups_sold(price_per_cup, cups_in_supplies, weather, tasteScore = 1) {
   const base_demand = 30;
   const weather_factor = WeatherFactor[weather] || 1.0;
   const ideal_price = IdealPrice[weather] || 0.35
@@ -298,7 +298,7 @@ function calculate_cups_sold(price_per_cup, cups_in_supplies, weather, tasteScor
  * @param {number} [ideal_sugar=1] - The ideal amount of sugar per cup.
  * @returns {number} A taste score between 0.5 and 1.2.
  */
-function calculate_taste_score(lemons_per_cup, sugar_per_cup, ideal_lemons = 1, ideal_sugar = 1) {
+export function calculate_taste_score(lemons_per_cup, sugar_per_cup, ideal_lemons = 1, ideal_sugar = 1) {
   const lemon_diff = Math.abs(lemons_per_cup - ideal_lemons);
   const sugar_diff = Math.abs(sugar_per_cup - ideal_sugar);
 
@@ -319,7 +319,7 @@ function calculate_taste_score(lemons_per_cup, sugar_per_cup, ideal_lemons = 1, 
  * @param {GameState} game_state - The current game state.
  * @returns {number} The number of cups sold during the day.
  */
-function simulate_day(game_state) {
+export function simulate_day(game_state) {
   console.assert(game_state, 'game_state must not be undefined');
 
   const recipe = game_state.recipe;
@@ -346,7 +346,7 @@ function simulate_day(game_state) {
  * @param {GameState} game_state - The current game state.
  * @returns {GameState} A new game state with updated money, supplies, and cups sold.
  */
-function make_lemonade(game_state) {
+export function make_lemonade(game_state) {
   console.assert(game_state, 'game_state must be defined');
 
   const recipe = game_state.recipe;
