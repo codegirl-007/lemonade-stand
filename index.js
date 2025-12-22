@@ -5,9 +5,11 @@
 
 import { init_game } from './game.js';
 import { sprites, cups, render, whenSpritesReady } from './canvasController.js';
+import { createReactiveState, updateBindings } from './binding.js';
 
 // Initialize game state
-let gameState = init_game();
+let gameState = createReactiveState(init_game());
+updateBindings(gameState);
 
 // Wait for all sprites to load, then render once
 whenSpritesReady(() => {
@@ -22,14 +24,20 @@ whenSpritesReady(() => {
 });
 
 // UI Elements
-const goShoppingBtn = document.querySelector('.go-shopping-btn');
+const goShoppingBtn = document.querySelector('.go_shopping_btn');
+const shoppingModal = document.querySelector('.shopping_modal');
+const shoppingModalClose = document.querySelector('.shopping_modal_close');
 
 // Event handlers
 if (goShoppingBtn) {
   goShoppingBtn.addEventListener('click', () => {
-    console.log('Go shopping clicked!');
-    // TODO: Open shopping modal/UI
+    console.log('hey');
+    shoppingModal.classList.add('open');
   });
+
+  shoppingModalClose.addEventListener('click', () => {
+    shoppingModal.classList.remove('open')
+  })
 }
 
 // Export for debugging in console

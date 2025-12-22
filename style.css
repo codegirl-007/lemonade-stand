@@ -65,7 +65,7 @@ canvas {
   pointer-events: none;
 }
 
-.go-shopping-btn {
+.go_shopping_btn {
   font-family: 'Fredoka', sans-serif;
   font-size: 16px;
   font-weight: 600;
@@ -81,13 +81,309 @@ canvas {
   display: block;
 }
 
-.go-shopping-btn:hover {
+.go_shopping_btn:hover {
   background: linear-gradient(180deg, #ffe066 0%, #FDB813 100%);
   transform: translateY(-2px);
   box-shadow: 0 6px 0 #3f7a33;
 }
 
-.go-shopping-btn:active {
+.go_shopping_btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #3f7a33;
+}
+
+/* Shopping Modal */
+.shopping_modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+
+.shopping_modal.open {
+  display: flex;
+}
+
+.shopping_modal_content {
+  background-color: #FFF9E6;
+  border: 4px solid #8fd16a;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-width: 90%;
+}
+
+.shopping_modal_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 2px solid #8fd16a;
+}
+
+.shopping_modal_title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 24px;
+  color: #5C4632;
+  margin: 0;
+}
+
+.shopping_modal_close {
+  font-size: 28px;
+  font-weight: bold;
+  color: #7A6146;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+.shopping_modal_close:hover {
+  color: #5C4632;
+}
+
+.shopping_modal_body {
+  padding: 16px 20px;
+}
+
+.shop_item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0d4c0;
+}
+
+.shop_item:last-child {
+  border-bottom: none;
+}
+
+.shop_item_name {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 18px;
+  color: #5C4632;
+  flex: 1;
+}
+
+.shop_item_price {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #7A6146;
+  margin-right: 16px;
+}
+
+.shop_item_btn {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  background: linear-gradient(180deg, #8fd16a 0%, #7bc256 100%);
+  color: #fff;
+  border: 2px solid #3f7a33;
+  border-radius: 8px;
+  padding: 6px 16px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #3f7a33;
+  transition: all 0.1s ease;
+}
+
+.shop_item_btn:hover {
+  background: linear-gradient(180deg, #a5e07a 0%, #8fd16a 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 #3f7a33;
+}
+
+.shop_item_btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #3f7a33;
+}
+
+/* Change Price Button */
+.change_price_button {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  background: linear-gradient(180deg, #FDB813 0%, #f5a800 100%);
+  color: #5C4632;
+  border: 3px solid #3f7a33;
+  border-radius: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #3f7a33;
+  transition: all 0.1s ease;
+  margin: 12px auto 0;
+  display: block;
+}
+
+.change_price_button:hover {
+  background: linear-gradient(180deg, #ffe066 0%, #FDB813 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #3f7a33;
+}
+
+.change_price_button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #3f7a33;
+}
+
+/* Price Change Modal */
+.price_change_modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+
+.price_change_modal.open {
+  display: flex;
+}
+
+.price_change_modal_content {
+  background-color: #FFF9E6;
+  border: 4px solid #8fd16a;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  width: 320px;
+  max-width: 90%;
+}
+
+.price_change_modal_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 2px solid #8fd16a;
+}
+
+.price_change_modal_title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 24px;
+  color: #5C4632;
+  margin: 0;
+}
+
+.price_change_modal_close {
+  font-size: 28px;
+  font-weight: bold;
+  color: #7A6146;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+.price_change_modal_close:hover {
+  color: #5C4632;
+}
+
+.price_change_modal_body {
+  padding: 20px;
+  text-align: center;
+}
+
+.price_change_hint {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #7A6146;
+  margin: 0 0 16px;
+}
+
+.price_input_group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.price_currency {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 32px;
+  color: #5C4632;
+  margin-right: 4px;
+}
+
+.price_input {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: #5C4632;
+  background: #fff;
+  border: 3px solid #8fd16a;
+  border-radius: 12px;
+  padding: 8px 12px;
+  width: 120px;
+  text-align: center;
+  outline: none;
+}
+
+.price_input:focus {
+  border-color: #3f7a33;
+  box-shadow: 0 0 0 3px rgba(143, 209, 106, 0.3);
+}
+
+.price_presets {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.price_preset_btn {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  background: #fff;
+  color: #5C4632;
+  border: 2px solid #e0d4c0;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.price_preset_btn:hover {
+  border-color: #8fd16a;
+  background: #f0ffe0;
+}
+
+.price_preset_btn:active {
+  transform: scale(0.95);
+}
+
+.price_change_save_btn {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  background: linear-gradient(180deg, #8fd16a 0%, #7bc256 100%);
+  color: #fff;
+  border: 3px solid #3f7a33;
+  border-radius: 12px;
+  padding: 10px 32px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #3f7a33;
+  transition: all 0.1s ease;
+}
+
+.price_change_save_btn:hover {
+  background: linear-gradient(180deg, #a5e07a 0%, #8fd16a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #3f7a33;
+}
+
+.price_change_save_btn:active {
   transform: translateY(2px);
   box-shadow: 0 2px 0 #3f7a33;
 }
