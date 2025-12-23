@@ -3,7 +3,7 @@
  * Initializes game state, wires up UI events, and coordinates modules.
  */
 
-import { init_game, set_price_per_cup } from './game.js';
+import { init_game, set_price_per_cup, calculate_supply_cost } from './game.js';
 import { sprites, cups, render, whenSpritesReady } from './canvasController.js';
 import { createReactiveState, updateBindings } from './binding.js';
 
@@ -35,10 +35,53 @@ const priceInput = document.querySelector('.price_input');
 
 const priceSaveBtn = document.querySelector('.price_change_save_btn');
 
+// Shopping modal - quantity inputs and dynamic pricing
+const shopQtyInputs = document.querySelectorAll('.shop_qty_input');
+const shopBuyBtns = document.querySelectorAll('.shop_item_btn');
+
+function updateShopPrice(item) {
+  const input = document.querySelector(`.shop_qty_input[data-item="${item}"]`);
+  const priceDisplay = document.querySelector(`.shop_item_price[data-price="${item}"]`);
+  const qty = parseInt(input.value) || 0;
+  const cost = calculate_supply_cost(item, qty);
+  priceDisplay.textContent = '$' + cost.toFixed(2);
+}
+
+// Update prices when quantity changes
+shopQtyInputs.forEach(input => {
+  input.addEventListener('input', () => {
+    updateShopPrice(input.dataset.item);
+  });
+});
+
+// Buy button handlers
+shopBuyBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.dataset.item;
+    const input = document.querySelector(`.shop_qty_input[data-item="${item}"]`);
+    const qty = parseInt(input.value) || 0;
+    const cost = calculate_supply_cost(item, qty);
+    
+    if (cost > gameState.player_money) {
+      alert("Not enough money!");
+      return;
+    }
+    
+    setState({
+      player_money: gameState.player_money - cost,
+      supplies: {
+        ...gameState.supplies,
+        [item]: gameState.supplies[item] + qty
+      }
+    });
+  });
+});
+
 // Event handlers
 if (goShoppingBtn) {
   goShoppingBtn.addEventListener('click', () => {
-    console.log('hey');
+    // Update all prices when modal opens
+    ['lemons', 'sugar', 'ice', 'cups'].forEach(updateShopPrice);
     shoppingModal.classList.add('open');
   });
 

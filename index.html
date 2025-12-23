@@ -60,24 +60,55 @@
       </div>
       <div class="shopping_modal_body">
         <div class="shop_item">
-          <span class="shop_item_name">Lemons</span>
-          <span class="shop_item_price">$4.80 / 12</span>
-          <button class="shop_item_btn">Buy</button>
+          <div class="shop_item_info">
+            <span class="shop_item_name">Lemons</span>
+            <div class="shop_tiers">
+              <span class="shop_tier">1-50: $0.02</span>
+              <span class="shop_tier">51-100: $0.018</span>
+              <span class="shop_tier best">101+: $0.015</span>
+            </div>
+          </div>
+          <input type="number" class="shop_qty_input" data-item="lemons" min="1" value="10">
+          <span class="shop_item_price" data-price="lemons">$0.20</span>
+          <button class="shop_item_btn" data-item="lemons">Buy</button>
         </div>
         <div class="shop_item">
-          <span class="shop_item_name">Sugar</span>
-          <span class="shop_item_price">$4.80 / 12</span>
-          <button class="shop_item_btn">Buy</button>
+          <div class="shop_item_info">
+            <span class="shop_item_name">Sugar</span>
+            <div class="shop_tiers">
+              <span class="shop_tier">1-50: $0.01</span>
+              <span class="shop_tier">51-100: $0.009</span>
+              <span class="shop_tier best">101+: $0.008</span>
+            </div>
+          </div>
+          <input type="number" class="shop_qty_input" data-item="sugar" min="1" value="10">
+          <span class="shop_item_price" data-price="sugar">$0.10</span>
+          <button class="shop_item_btn" data-item="sugar">Buy</button>
         </div>
         <div class="shop_item">
-          <span class="shop_item_name">Ice</span>
-          <span class="shop_item_price">$1.00 / 50</span>
-          <button class="shop_item_btn">Buy</button>
+          <div class="shop_item_info">
+            <span class="shop_item_name">Ice</span>
+            <div class="shop_tiers">
+              <span class="shop_tier">1-100: $0.01</span>
+              <span class="shop_tier">101-300: $0.009</span>
+              <span class="shop_tier best">301+: $0.008</span>
+            </div>
+          </div>
+          <input type="number" class="shop_qty_input" data-item="ice" min="1" value="50">
+          <span class="shop_item_price" data-price="ice">$0.50</span>
+          <button class="shop_item_btn" data-item="ice">Buy</button>
         </div>
         <div class="shop_item">
-          <span class="shop_item_name">Cups</span>
-          <span class="shop_item_price">$1.00 / 75</span>
-          <button class="shop_item_btn">Buy</button>
+          <div class="shop_item_info">
+            <span class="shop_item_name">Cups</span>
+            <div class="shop_tiers">
+              <span class="shop_tier">1-100: $0.01</span>
+              <span class="shop_tier best">101+: $0.009</span>
+            </div>
+          </div>
+          <input type="number" class="shop_qty_input" data-item="cups" min="1" value="25">
+          <span class="shop_item_price" data-price="cups">$0.25</span>
+          <button class="shop_item_btn" data-item="cups">Buy</button>
         </div>
       </div>
     </div>

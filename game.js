@@ -75,6 +75,56 @@ const IdealRecipe = {
 }
 
 /**
+ * Tiered pricing structure for supplies.
+ * Price per unit decreases with larger quantities.
+ * @type {Object.<string, Array.<{min: number, max: number, price: number}>>}
+ */
+const SupplyPricing = {
+  lemons: [
+    { min: 1, max: 50, price: 0.02 },
+    { min: 51, max: 100, price: 0.018 },
+    { min: 101, max: Infinity, price: 0.015 }
+  ],
+  sugar: [
+    { min: 1, max: 50, price: 0.01 },
+    { min: 51, max: 100, price: 0.009 },
+    { min: 101, max: Infinity, price: 0.008 }
+  ],
+  ice: [
+    { min: 1, max: 100, price: 0.01 },
+    { min: 101, max: 300, price: 0.009 },
+    { min: 301, max: Infinity, price: 0.008 }
+  ],
+  cups: [
+    { min: 1, max: 100, price: 0.01 },
+    { min: 101, max: Infinity, price: 0.009 }
+  ]
+};
+
+/**
+ * Calculate the cost of purchasing a supply item based on tiered pricing.
+ * @param {string} item - The supply type (lemons, sugar, ice, cups)
+ * @param {number} quantity - The quantity to purchase
+ * @returns {number} The total cost
+ */
+export function calculate_supply_cost(item, quantity) {
+  if (quantity <= 0) return 0;
+  const tiers = SupplyPricing[item];
+  if (!tiers) return 0;
+  const tier = tiers.find(t => quantity >= t.min && quantity <= t.max);
+  return tier ? Math.round(quantity * tier.price * 100) / 100 : 0;
+}
+
+/**
+ * Get the pricing tiers for a supply item.
+ * @param {string} item - The supply type
+ * @returns {Array.<{min: number, max: number, price: number}>} The pricing tiers
+ */
+export function get_supply_pricing(item) {
+  return SupplyPricing[item] || [];
+}
+
+/**
  * Probability weights for each weather type.
  * Used to randomly determine the day's weather.
  * @type {Array.<{type: string, weight: number}>
