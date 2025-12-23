@@ -3,7 +3,7 @@
  * Initializes game state, wires up UI events, and coordinates modules.
  */
 
-import { init_game } from './game.js';
+import { init_game, set_price_per_cup } from './game.js';
 import { sprites, cups, render, whenSpritesReady } from './canvasController.js';
 import { createReactiveState, updateBindings } from './binding.js';
 
@@ -28,6 +28,13 @@ const goShoppingBtn = document.querySelector('.go_shopping_btn');
 const shoppingModal = document.querySelector('.shopping_modal');
 const shoppingModalClose = document.querySelector('.shopping_modal_close');
 
+const changePriceBtn = document.querySelector('.change_price_button');
+const priceModal = document.querySelector('.price_change_modal');
+const priceModalClose = document.querySelector('.price_change_modal_close');
+const priceInput = document.querySelector('.price_input');
+
+const priceSaveBtn = document.querySelector('.price_change_save_btn');
+
 // Event handlers
 if (goShoppingBtn) {
   goShoppingBtn.addEventListener('click', () => {
@@ -36,11 +43,35 @@ if (goShoppingBtn) {
   });
 
   shoppingModalClose.addEventListener('click', () => {
-    shoppingModal.classList.remove('open')
+    shoppingModal.classList.remove('open');
   })
 }
 
+if (changePriceBtn) {
+  changePriceBtn.addEventListener('click', () => {
+
+    priceModal.classList.add('open');
+    priceInput.focus();
+    const priceInputLength = priceInput.value.length;
+
+    priceInput.setSelectionRange(priceInputLength, priceInputLength);
+  });
+
+  priceModalClose.addEventListener('click', () => {
+    priceModal.classList.remove('open');
+  });
+
+  priceSaveBtn.addEventListener('click', () => {
+    const newState = set_price_per_cup(gameState, Number(priceInput.value));
+    setState(newState);
+    priceModal.classList.remove('open');
+  })
+}
 // Export for debugging in console
 window.gameState = gameState;
 window.sprites = sprites;
 window.cups = cups;
+
+function setState(newState) {
+  Object.assign(gameState, newState);
+}

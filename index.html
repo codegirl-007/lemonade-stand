@@ -24,6 +24,7 @@
         <li>Sugar: <span data-bind="supplies.sugar"></span></li>
         <li>Ice: <span data-bind="supplies.ice"></span></li>
         <li>Cups: <span data-bind="supplies.cups"></span></li>
+        <li>Money: <span data-bind="player_money" data-format="currency"></span></li>
       </ul>
 
       <button class="go_shopping_btn">Go shopping</button>
@@ -92,7 +93,7 @@
         <p class="price_change_hint">Choose how much to charge per cup of lemonade.</p>
         <div class="price_input_group">
           <span class="price_currency">$</span>
-          <input type="number" class="price_input" min="0.01" max="9.99" step="0.01" value="0.25">
+          <input type="text" class="price_input" inputmode="decimal">
         </div>
         <button class="price_change_save_btn">Save Price</button>
       </div>
