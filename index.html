@@ -16,6 +16,12 @@
   </header>
 
   <div class="dashboard">
+    <section class="game_section weather_section">
+      <h2 class="section_title">Weather</h2>
+      <img class="weather_icon" src="sunny.png" alt="Weather">
+      <p class="weather_label" data-bind="weather">sunny</p>
+    </section>
+
     <section class="game_section">
       <h2 class="section_title">Supplies</h2>
 
@@ -49,18 +55,6 @@
       <p data-bind="price_per_cup" data-format="currency"></p>
 
       <button class="change_price_button">Change Price</button>
-    </section>
-
-    <section class="game_section">
-      <h2 class="section_title">Total Earnings</h2>
-
-      <p data-bind="total_earnings" data-format="currency">$0.00</p>
-    </section>
-
-    <section class="game_section weather_section">
-      <h2 class="section_title">Weather</h2>
-      <img class="weather_icon" src="sunny.png" alt="Weather">
-      <p class="weather_label" data-bind="weather">sunny</p>
     </section>
 
     <section class="game_section day_section">

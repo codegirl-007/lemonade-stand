@@ -4,6 +4,8 @@ body {
   background: linear-gradient(180deg, #cfefff 0%, #f7ffe5 100%);
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
+  padding: 0;
+  margin: 0;
 }
 
 .game_header {

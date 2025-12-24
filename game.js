@@ -443,3 +443,24 @@ export function calculate_cost_per_cup(game_state, recipe) {
     cost_per_cup: Math.round(cost * 100) / 100,
   }
 }
+
+/**
+ * Calculate the maximum cups that can be produced from available supplies.
+ * @param {Supplies} supplies - Available supplies
+ * @param {Recipe} recipe - Recipe per cup
+ * @returns {number} Maximum cups producible (floored)
+ */
+export function calculate_maximum_cups_available(supplies, recipe) {
+  console.assert(supplies, 'supplies must be defined');
+  console.assert(recipe, 'recipe must be defined');
+
+  // Can't make lemonade without lemons
+  if (recipe.lemons === 0) return 0;
+
+  return Math.floor(Math.min(
+    recipe.lemons > 0 ? supplies.lemons / recipe.lemons : Infinity,
+    recipe.sugar > 0 ? supplies.sugar / recipe.sugar : Infinity,
+    recipe.ice > 0 ? supplies.ice / recipe.ice : Infinity,
+    supplies.cups
+  ));
+}

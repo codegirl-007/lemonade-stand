@@ -55,6 +55,51 @@ export const sprites = {
   }),
   seesaw: createSprite({
     source: 'seesaw.png'
+  }),
+  customer1: createSprite({
+    source: 'customer_1.png'
+  }),
+  customer2: createSprite({
+    source: 'customer_2.png'
+  }),
+  customer3: createSprite({
+    source: 'customer_3.png'
+  }),
+  customer4: createSprite({
+    source: 'customer_4.png'
+  }),
+  customer5: createSprite({
+    source: 'customer_5.png'
+  }),
+  customer6: createSprite({
+    source: 'customer_6.png'
+  }),
+  customer7: createSprite({
+    source: 'customer_7.png'
+  }),
+  customer8: createSprite({
+    source: 'customer_8.png'
+  }),
+  customer9: createSprite({
+    source: 'customer_9.png'
+  }),
+  customer10: createSprite({
+    source: 'customer_10.png'
+  }),
+  customer11: createSprite({
+    source: 'customer_11.png'
+  }),
+  customer12: createSprite({
+    source: 'customer_12.png'
+  }),
+  customer13: createSprite({
+    source: 'customer_13.png'
+  }),
+  customer14: createSprite({
+    source: 'customer_14.png'
+  }),
+  customer15: createSprite({
+    source: 'customer_15.png'
   })
 };
 
@@ -136,7 +181,7 @@ export function render() {
 
   // Background
   drawGround(sprites.grass);
-  
+
   // Background trees
   drawSprite(sprites.tree, 600, 50, 0.25);
   drawSprite(sprites.tree, 200, 50, 0.2);
@@ -149,12 +194,16 @@ export function render() {
   drawShadow(500, 360, 180, 50);
 
   // Lemonade stand
-  drawSprite(sprites.maker, 430, 160, 0.6);
-  drawSprite(sprites.stand, 350, 50, 0.7);
+  drawSprite(sprites.maker, 430, 160, 0.55);
+  drawSprite(sprites.stand, 350, 50, 0.6);
   drawSprite(sprites.pitcher, 620, 290, 0.3);
 
   // Draw all cup instances
   cups.forEach(cup => drawInstance(cup));
+
+  // Customers
+  drawSprite(sprites.customer2, 300, 180, 0.45);
+  drawSprite(sprites.customer5, 700, 180, 0.45);
 
   // Invoke callback if set
   if (onRenderCallback) onRenderCallback();

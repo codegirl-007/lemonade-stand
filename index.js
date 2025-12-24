@@ -3,7 +3,7 @@
  * Initializes game state, wires up UI events, and coordinates modules.
  */
 
-import { init_game, set_price_per_cup, calculate_supply_cost, calculate_cost_per_cup, make_lemonade, set_weather } from './game.js';
+import { init_game, set_price_per_cup, calculate_supply_cost, calculate_cost_per_cup, make_lemonade, set_weather, calculate_maximum_cups_available } from './game.js';
 import { sprites, cups, render, whenSpritesReady } from './canvasController.js';
 import { createReactiveState, updateBindings } from './binding.js';
 
@@ -25,23 +25,55 @@ updateWeatherIcon();
 
 let isAnimating = false;
 
-function animateCupFills(count, onComplete) {
-  let filled = 0;
-  sprites.maker.frameIndex = 1; // Maker active
-  render();
+function generateSalesAttempts(maxCups, cupsSold) {
+  const attempts = Array(maxCups).fill(false);
+  for (let i = 0; i < cupsSold; i++) attempts[i] = true;
+  // Fisher-Yates shuffle
+  for (let i = attempts.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [attempts[i], attempts[j]] = [attempts[j], attempts[i]];
+  }
+  return attempts;
+}
 
-  const interval = setInterval(() => {
-    if (filled < count && filled < cups.length) {
-      cups[filled].fill();
-      render();
-      filled++;
-    } else {
-      clearInterval(interval);
+function animateSales(attempts, onComplete) {
+  let i = 0;
+  let cupIndex = 0;
+
+  function nextAttempt() {
+    if (i >= attempts.length) {
       sprites.maker.frameIndex = 0; // Maker idle
       render();
       onComplete();
+      return;
     }
-  }, 400);
+
+    if (attempts[i]) {
+      // Buy: maker active, empty cup, wait, refill, maker idle
+      sprites.maker.frameIndex = 1;
+      cups[cupIndex].empty();
+      render();
+      setTimeout(() => {
+        sprites.maker.frameIndex = 0;
+        cups[cupIndex].fill();
+        render();
+        cupIndex = (cupIndex + 1) % cups.length;
+        i++;
+        nextAttempt();
+      }, 400);
+    } else {
+      // Pass: skip instantly
+      i++;
+      nextAttempt();
+    }
+  }
+
+  nextAttempt();
+}
+
+function fillAllCups() {
+  cups.forEach(cup => cup.fill());
+  render();
 }
 
 function resetCups() {
@@ -230,22 +262,25 @@ function startDay() {
   }
 
   const { recipe } = gameState;
-  if (recipe.lemons <= 0 && recipe.sugar <= 0 && recipe.ice <= 0) {
-    alert('Set a recipe with at least one ingredient!');
+  if (recipe.lemons <= 0) {
+    alert('Your recipe needs lemons!');
     return;
   }
 
-  if (isAnimating) return; // Prevent double-click
+  if (isAnimating) return;
   isAnimating = true;
   startDayBtn.disabled = true;
 
-  resetCups();
+  // Fill all cups at start
+  fillAllCups();
 
+  const maxCups = calculate_maximum_cups_available(gameState.supplies, gameState.recipe);
   const result = make_lemonade(gameState);
   const cupsSold = result.cups_sold;
 
-  // Animate cup fills
-  animateCupFills(cupsSold, () => {
+  const attempts = generateSalesAttempts(maxCups, cupsSold);
+
+  animateSales(attempts, () => {
     setState(result);
 
     // Randomize weather for next day
