@@ -681,6 +681,16 @@ canvas {
   margin: 16px 0;
 }
 
+.cost_breakdown {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #7A6146;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .recipe_cost_row {
   display: flex;
   justify-content: space-between;
