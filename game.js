@@ -180,7 +180,7 @@ const WeatherChance = [
  */
 export function init_game() {
   return {
-    player_money: 25.00,
+    player_money: 2.00,
     recipe: {
       lemons: 0,
       sugar: 0,

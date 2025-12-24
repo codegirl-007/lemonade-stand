@@ -31,6 +31,19 @@
     </section>
 
     <section class="game_section">
+      <h2 class="section_title">Recipe</h2>
+      <p class="section_hint">Per cup of lemonade</p>
+
+      <ul class="game_list">
+        <li>Lemons: <span data-bind="recipe.lemons">0</span></li>
+        <li>Sugar: <span data-bind="recipe.sugar">0</span></li>
+        <li>Ice: <span data-bind="recipe.ice">0</span></li>
+      </ul>
+
+      <button class="change_recipe_btn">Change Recipe</button>
+    </section>
+
+    <section class="game_section">
       <h2 class="section_title">Total Earnings</h2>
 
       <p>$0.00</p>
@@ -45,10 +58,10 @@
       <button class="change_price_button">Change Price</button>
     </section>
 
-    <section class="game_section">
+    <section class="game_section weather_section">
       <h2 class="section_title">Weather</h2>
-
-      <p>Today's weather is: </p>
+      <img class="weather_icon" src="sunny.png" alt="Weather">
+      <p class="weather_label" data-bind="weather">sunny</p>
     </section>
   </div>
 
@@ -127,6 +140,33 @@
           <input type="text" class="price_input" inputmode="decimal">
         </div>
         <button class="price_change_save_btn">Save Price</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="recipe_modal">
+    <div class="recipe_modal_content">
+      <div class="recipe_modal_header">
+        <h2 class="recipe_modal_title">Set Your Recipe</h2>
+        <button class="recipe_modal_close">&times;</button>
+      </div>
+      <div class="recipe_modal_body">
+        <p class="recipe_modal_hint">Ingredients per cup of lemonade</p>
+        <div class="recipe_grid">
+          <div class="recipe_item">
+            <label class="recipe_label">Lemons</label>
+            <input type="number" class="recipe_input" data-recipe="lemons" min="0" max="10" value="1">
+          </div>
+          <div class="recipe_item">
+            <label class="recipe_label">Sugar</label>
+            <input type="number" class="recipe_input" data-recipe="sugar" min="0" max="10" value="1">
+          </div>
+          <div class="recipe_item">
+            <label class="recipe_label">Ice</label>
+            <input type="number" class="recipe_input" data-recipe="ice" min="0" max="10" value="3">
+          </div>
+        </div>
+        <button class="recipe_save_btn">Save Recipe</button>
       </div>
     </div>
   </div>

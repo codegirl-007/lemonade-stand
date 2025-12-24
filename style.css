@@ -17,8 +17,8 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
 }
 
 .game_header_title {
@@ -41,12 +41,78 @@ body {
   border-radius: 20px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   color: #7A6146;
+  display: flex;
+  flex-direction: column;
+}
+
+.game_section button {
+  margin-top: auto;
+}
+
+/* Weather Section */
+.weather_section {
+  text-align: center;
+}
+
+.weather_icon {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin: 8px auto;
+  display: block;
+}
+
+.weather_label {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: #5C4632;
+  text-transform: capitalize;
+  margin: 0;
 }
 
 .game_list {
   list-style: none;
-  margin: 0;
+  margin: 8px 0;
   padding: 0;
+}
+
+.game_list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #7A6146;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+}
+
+.game_list li:last-child {
+  margin-bottom: 0;
+}
+
+.game_list li span {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #5C4632;
+}
+
+.game_section>p {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #5C4632;
+  margin: 12px 0;
+  text-align: center;
+}
+
+.game_section .section_hint {
+  font-size: 11px;
+  margin: 2px 0 8px;
 }
 
 .section_title {
@@ -55,6 +121,65 @@ body {
   padding: 0;
   color: #5C4632;
   letter-spacing: 1px;
+}
+
+.section_hint {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #9a8a7a;
+  margin: 4px 0 12px;
+}
+
+/* Recipe Section */
+.recipe_grid {
+  display: flex;
+  gap: 12px;
+}
+
+.recipe_item {
+  flex: 1;
+  text-align: center;
+}
+
+.recipe_label {
+  display: block;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  color: #7A6146;
+  margin-bottom: 6px;
+}
+
+.recipe_input {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #5C4632;
+  background: linear-gradient(180deg, #fff 0%, #f9f9f5 100%);
+  border: 2px solid #c5e8a8;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  transition: all 0.15s ease;
+  -moz-appearance: textfield;
+}
+
+.recipe_input::-webkit-outer-spin-button,
+.recipe_input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.recipe_input:hover {
+  border-color: #8fd16a;
+}
+
+.recipe_input:focus {
+  outline: none;
+  border-color: #3f7a33;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06), 0 0 0 3px rgba(143, 209, 106, 0.25);
 }
 
 canvas {
@@ -448,6 +573,131 @@ canvas {
 }
 
 .price_change_save_btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #3f7a33;
+}
+
+/* Change Recipe Button */
+.change_recipe_btn {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  background: linear-gradient(180deg, #FDB813 0%, #f5a800 100%);
+  color: #5C4632;
+  border: 3px solid #3f7a33;
+  border-radius: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #3f7a33;
+  transition: all 0.1s ease;
+  margin: 12px auto 0;
+  display: block;
+}
+
+.change_recipe_btn:hover {
+  background: linear-gradient(180deg, #ffe066 0%, #FDB813 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #3f7a33;
+}
+
+.change_recipe_btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #3f7a33;
+}
+
+/* Recipe Modal */
+.recipe_modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipe_modal.open {
+  display: flex;
+}
+
+.recipe_modal_content {
+  background-color: #FFF9E6;
+  border: 4px solid #8fd16a;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  width: 360px;
+  max-width: 90%;
+}
+
+.recipe_modal_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 2px solid #8fd16a;
+}
+
+.recipe_modal_title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 24px;
+  color: #5C4632;
+  margin: 0;
+}
+
+.recipe_modal_close {
+  font-size: 28px;
+  font-weight: bold;
+  color: #7A6146;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+.recipe_modal_close:hover {
+  color: #5C4632;
+}
+
+.recipe_modal_body {
+  padding: 20px;
+}
+
+.recipe_modal_hint {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #7A6146;
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.recipe_save_btn {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  background: linear-gradient(180deg, #8fd16a 0%, #7bc256 100%);
+  color: #fff;
+  border: 3px solid #3f7a33;
+  border-radius: 12px;
+  padding: 10px 32px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #3f7a33;
+  transition: all 0.1s ease;
+  margin-top: 16px;
+  display: block;
+  width: 100%;
+}
+
+.recipe_save_btn:hover {
+  background: linear-gradient(180deg, #a5e07a 0%, #8fd16a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #3f7a33;
+}
+
+.recipe_save_btn:active {
   transform: translateY(2px);
   box-shadow: 0 2px 0 #3f7a33;
 }
