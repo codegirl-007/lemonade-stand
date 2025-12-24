@@ -119,6 +119,22 @@ export function drawSprite(spriteObject, x, y, scale) {
 }
 
 /**
+ * Draws a sprite with alpha transparency.
+ *
+ * @param {Sprite} sprite - The sprite to draw
+ * @param {number} x - X position
+ * @param {number} y - Y position
+ * @param {number} scale - Scale factor
+ * @param {number} alpha - Alpha transparency (0-1)
+ */
+export function drawSpriteWithAlpha(sprite, x, y, scale, alpha) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  drawSprite(sprite, x, y, scale);
+  ctx.restore();
+}
+
+/**
  * Draws a cup (or any object with sprite, x, y, scale, frameIndex).
  *
  * @param {Cup} instance - The cup to draw

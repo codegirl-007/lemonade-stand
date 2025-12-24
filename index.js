@@ -4,7 +4,7 @@
  */
 
 import { init_game, set_price_per_cup, calculate_supply_cost, calculate_cost_per_cup, make_lemonade, set_weather, calculate_maximum_cups_available } from './game.js';
-import { sprites, cups, render, whenSpritesReady } from './canvasController.js';
+import { sprites, cups, render, whenSpritesReady, setActiveCustomer, getRandomCustomerKey } from './canvasController.js';
 import { createReactiveState, updateBindings } from './binding.js';
 
 // Initialize game state
@@ -36,36 +36,78 @@ function generateSalesAttempts(maxCups, cupsSold) {
   return attempts;
 }
 
+/**
+ * Fades a customer in or out using requestAnimationFrame.
+ * @param {string} spriteKey - Customer sprite key
+ * @param {number} posIndex - Position index (0=left, 1=right)
+ * @param {number} fromAlpha - Starting alpha
+ * @param {number} toAlpha - Ending alpha
+ * @param {number} duration - Duration in ms
+ * @param {Function} onComplete - Callback when complete
+ */
+function fadeCustomer(spriteKey, posIndex, fromAlpha, toAlpha, duration, onComplete) {
+  const startTime = performance.now();
+  function step() {
+    const elapsed = performance.now() - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const alpha = fromAlpha + (toAlpha - fromAlpha) * progress;
+    setActiveCustomer(spriteKey, posIndex, alpha);
+    render();
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    } else {
+      onComplete();
+    }
+  }
+  step();
+}
+
 function animateSales(attempts, onComplete) {
   let i = 0;
   let cupIndex = 0;
+  let posIndex = 0;
 
   function nextAttempt() {
     if (i >= attempts.length) {
-      sprites.maker.frameIndex = 0; // Maker idle
+      setActiveCustomer(null, 0, 0);
+      sprites.maker.frameIndex = 0;
       render();
       onComplete();
       return;
     }
 
-    if (attempts[i]) {
-      // Buy: maker active, empty cup, wait, refill, maker idle
-      sprites.maker.frameIndex = 1;
-      cups[cupIndex].empty();
-      render();
-      setTimeout(() => {
-        sprites.maker.frameIndex = 0;
-        cups[cupIndex].fill();
+    // Pick random customer, alternate position
+    const customerKey = getRandomCustomerKey();
+    posIndex = (posIndex + 1) % 2;
+
+    // Fade in customer
+    fadeCustomer(customerKey, posIndex, 0, 1, 500, () => {
+      if (attempts[i]) {
+        // Buy: maker active, empty cup, wait, refill, maker idle, fade out
+        sprites.maker.frameIndex = 1;
+        cups[cupIndex].empty();
         render();
-        cupIndex = (cupIndex + 1) % cups.length;
-        i++;
-        nextAttempt();
-      }, 400);
-    } else {
-      // Pass: skip instantly
-      i++;
-      nextAttempt();
-    }
+        setTimeout(() => {
+          sprites.maker.frameIndex = 0;
+          cups[cupIndex].fill();
+          render();
+          cupIndex = (cupIndex + 1) % cups.length;
+          // Fade out customer
+          fadeCustomer(customerKey, posIndex, 1, 0, 500, () => {
+            i++;
+            nextAttempt();
+          });
+        }, 600);
+      } else {
+        // Pass: brief pause then fade out
+        setTimeout(() => {
+          fadeCustomer(customerKey, posIndex, 1, 0, 500, () => {
+            i++;
+            nextAttempt();
+          });
+        }, 500);
+      }
+    });
   }
 
   nextAttempt();

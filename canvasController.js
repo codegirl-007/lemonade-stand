@@ -8,6 +8,7 @@ import {
   ctx,
   createSprite,
   drawSprite,
+  drawSpriteWithAlpha,
   drawInstance,
   drawGround,
   drawShadow,
@@ -103,6 +104,44 @@ export const sprites = {
   })
 };
 
+// Customer positions (alternating left/right)
+const customerPositions = [
+  { x: 300, y: 180 },  // left
+  { x: 700, y: 180 }   // right
+];
+
+// Active customer state
+export let activeCustomer = {
+  spriteKey: null,
+  positionIndex: 0,
+  alpha: 0
+};
+
+// All customer sprite keys
+const customerKeys = [
+  'customer1', 'customer2', 'customer3', 'customer4', 'customer5',
+  'customer6', 'customer7', 'customer8', 'customer9', 'customer10',
+  'customer11', 'customer12', 'customer13', 'customer14', 'customer15'
+];
+
+/**
+ * Sets the active customer for rendering.
+ * @param {string|null} spriteKey - Customer sprite key or null
+ * @param {number} positionIndex - 0 for left, 1 for right
+ * @param {number} alpha - Transparency (0-1)
+ */
+export function setActiveCustomer(spriteKey, positionIndex, alpha) {
+  activeCustomer = { spriteKey, positionIndex, alpha };
+}
+
+/**
+ * Gets a random customer sprite key.
+ * @returns {string} Random customer key
+ */
+export function getRandomCustomerKey() {
+  return customerKeys[Math.floor(Math.random() * customerKeys.length)];
+}
+
 /**
  * Checks if all sprites are loaded.
  * @returns {boolean}
@@ -167,10 +206,10 @@ export function createCup(x, y, scale = 0.1) {
  * @type {Array<import('./canvas.js').Cup>}
  */
 export const cups = [
-  createCup(455, 325, 0.15),
-  createCup(495, 325, 0.15),
-  createCup(535, 325, 0.15),
-  createCup(575, 325, 0.15),
+  createCup(455, 285, 0.15),
+  createCup(495, 285, 0.15),
+  createCup(535, 285, 0.15),
+  createCup(575, 285, 0.15),
 ];
 
 /**
@@ -196,14 +235,16 @@ export function render() {
   // Lemonade stand
   drawSprite(sprites.maker, 430, 160, 0.55);
   drawSprite(sprites.stand, 350, 50, 0.6);
-  drawSprite(sprites.pitcher, 620, 290, 0.3);
+  drawSprite(sprites.pitcher, 620, 260, 0.3);
 
   // Draw all cup instances
   cups.forEach(cup => drawInstance(cup));
 
-  // Customers
-  drawSprite(sprites.customer2, 300, 180, 0.45);
-  drawSprite(sprites.customer5, 700, 180, 0.45);
+  // Active customer (with fade)
+  if (activeCustomer.spriteKey && activeCustomer.alpha > 0) {
+    const pos = customerPositions[activeCustomer.positionIndex];
+    drawSpriteWithAlpha(sprites[activeCustomer.spriteKey], pos.x, pos.y, 0.45, activeCustomer.alpha);
+  }
 
   // Invoke callback if set
   if (onRenderCallback) onRenderCallback();
