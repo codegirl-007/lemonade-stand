@@ -11,16 +11,18 @@ export const Weather = Object.freeze({
 });
 
 /**
- * Enum representing game duration options.
- * Provides both numeric values and reverse lookups.
- * @readonly
- * @enum {number|string}
+ * Game balance constants.
  */
-export const Days = Object.freeze({
-  7: 7,
-  14: 14,
-  30: 30
-});
+const BASE_DEMAND = 30;
+const PRICE_SENSITIVITY = 1.5;
+const DEMAND_VARIANCE = 0.2;
+const TASTE_SCORE_MIN = 0.5;
+const TASTE_SCORE_MAX = 1.2;
+const TASTE_PENALTY_LEMON = 0.3;
+const TASTE_PENALTY_SUGAR = 0.2;
+const PERFECT_RECIPE_BONUS = 0.2;
+const STARTING_MONEY = 2.00;
+const STARTING_PRICE = 1.00;
 
 /**
  * Multiplier applied to base demand based on weather conditions.
@@ -75,6 +77,12 @@ const IdealRecipe = {
 }
 
 /**
+ * Valid supply item types.
+ * @type {string[]}
+ */
+const SupplyTypes = ['lemons', 'sugar', 'ice', 'cups'];
+
+/**
  * Tiered pricing structure for supplies.
  * Price per unit decreases with larger quantities.
  * @type {Object.<string, Array.<{min: number, max: number, price: number}>>}
@@ -108,6 +116,9 @@ const SupplyPricing = {
  * @returns {number} The total cost
  */
 export function calculate_supply_cost(item, quantity) {
+  console.assert(item, 'item must be defined');
+  console.assert(SupplyTypes.includes(item), 'item must be a valid supply type');
+  console.assert(typeof quantity === 'number', 'quantity must be a number');
   if (quantity <= 0) return 0;
   const tiers = SupplyPricing[item];
   if (!tiers) return 0;
@@ -121,6 +132,8 @@ export function calculate_supply_cost(item, quantity) {
  * @returns {Array.<{min: number, max: number, price: number}>} The pricing tiers
  */
 export function get_supply_pricing(item) {
+  console.assert(item, 'item must be defined');
+  console.assert(SupplyTypes.includes(item), 'item must be a valid supply type');
   return SupplyPricing[item] || [];
 }
 
@@ -152,25 +165,16 @@ const WeatherChance = [
  */
 
 /**
- * @typedef {Object.<number, number>} PriceTable
- */
-
-/**
  * @typedef {Object} GameState
  * @property {number} player_money
  * @property {Recipe} recipe
  * @property {Supplies} supplies
  * @property {string} weather
  * @property {number} price_per_cup
- * @property {number} days
- * @property {{
- *   lemons: PriceTable,
- *   sugar: PriceTable,
- *   ice: PriceTable,
- *   cups: PriceTable
- * }} supplies_prices
  * @property {number} cups_sold
  * @property {number} cost_per_cup
+ * @property {number} current_day
+ * @property {number} total_earnings
  */
 
 /**
@@ -181,7 +185,7 @@ const WeatherChance = [
  */
 export function init_game() {
   return {
-    player_money: 2.00,
+    player_money: STARTING_MONEY,
     recipe: {
       lemons: 0,
       sugar: 0,
@@ -194,32 +198,11 @@ export function init_game() {
       cups: 0
     },
     weather: Weather.SUNNY,
-    price_per_cup: 1.00,
-    days: Days[7],
-    supplies_prices: {
-      lemons: {
-        12: 4.80,
-        24: 7.20,
-        48: 9.60
-      },
-      sugar: {
-        12: 4.80,
-        20: 7.00,
-        50: 15.00
-      },
-      ice: {
-        50: 1.00,
-        200: 3.00,
-        500: 5.00
-      },
-      cups: {
-        75: 1.00,
-        225: 2.35,
-        400: 3.75
-      }
-    },
+    price_per_cup: STARTING_PRICE,
     cups_sold: 0,
-    cost_per_cup: 0
+    cost_per_cup: 0,
+    current_day: 1,
+    total_earnings: 0
   }
 }
 
@@ -235,9 +218,12 @@ export function init_game() {
  */
 export function set_recipe(game_state, lemons, sugar, ice) {
   console.assert(game_state, 'game_state must be defined');
-  console.assert(typeof lemons == 'number', 'lemons must be a number');
-  console.assert(typeof sugar == 'number', 'sugar must be a number');
-  console.assert(typeof ice == 'number', 'ice must be a number');
+  console.assert(typeof lemons === 'number', 'lemons must be a number');
+  console.assert(typeof sugar === 'number', 'sugar must be a number');
+  console.assert(typeof ice === 'number', 'ice must be a number');
+  console.assert(lemons >= 0, 'lemons must be non-negative');
+  console.assert(sugar >= 0, 'sugar must be non-negative');
+  console.assert(ice >= 0, 'ice must be non-negative');
 
   return {
     ...game_state,
@@ -255,11 +241,15 @@ export function set_recipe(game_state, lemons, sugar, ice) {
  * Uses WeatherChance to select a weather type.
  *
  * @param {GameState} game_state - The current state of the game.
+ * @param {number} [random=Math.random()] - Random value between 0-1 for deterministic testing.
  * @returns {GameState} A new game state with the updated weather.
  */
-export function set_weather(game_state) {
+export function set_weather(game_state, random = Math.random()) {
+  console.assert(game_state, 'game_state must be defined');
+  console.assert(typeof random === 'number', 'random must be a number');
+
   const totalWeight = WeatherChance.reduce((sum, w) => sum + w.weight, 0);
-  let roll = Math.random() * totalWeight;
+  let roll = random * totalWeight;
 
   for (const w of WeatherChance) {
     if (roll < w.weight) {
@@ -271,24 +261,11 @@ export function set_weather(game_state) {
 
     roll -= w.weight
   }
-}
 
-/**
- * Set the number of days the game will play through.
- * Valid options are 7 (week), 14 (two weeks), or 30 (month).
- *
- * @param {GameState} game_state - The current state of the game.
- * @param {number} days - The number of days (7, 14, or 30).
- * @returns {GameState} A new game state with the updated number of days.
- */
-export function set_days(game_state, days) {
-  console.assert(game_state, 'game_state must be defined');
-  console.assert(typeof days === 'number', 'days must be a number');
-  console.assert(Object.values(Days).includes(days), 'invalid days value');
-
+  // Fallback (should never reach here if weights are correct)
   return {
     ...game_state,
-    days: days
+    weather: Weather.SUNNY
   }
 }
 
@@ -301,11 +278,12 @@ export function set_days(game_state, days) {
  * @returns {GameState} A new game state with the updated cost per cup.
  */
 export function set_price_per_cup(game_state, cost) {
-  console.assert(typeof cost === 'number', 'cost must be a number');
   console.assert(game_state, 'game_state must be defined');
+  console.assert(typeof cost === 'number', 'cost must be a number');
+  console.assert(cost >= 0, 'cost must be non-negative');
   return {
     ...game_state,
-    price_per_cup: Math.round(parseFloat(cost) * 100) / 100
+    price_per_cup: Math.round(cost * 100) / 100
   }
 }
 
@@ -317,21 +295,26 @@ export function set_price_per_cup(game_state, cost) {
  * @param {number} cups_in_supplies - The number of cups available to sell.
  * @param {string} weather - The current weather condition (from Weather enum).
  * @param {number} [tasteScore=1] - The taste quality score (0.5 to 1.2).
+ * @param {number} [random=Math.random()] - Random value between 0-1 for deterministic testing.
  * @returns {number} The number of cups sold (capped by available supplies).
  */
-export function calculate_cups_sold(price_per_cup, cups_in_supplies, weather, tasteScore = 1) {
-  const base_demand = 30;
+export function calculate_cups_sold(price_per_cup, cups_in_supplies, weather, tasteScore = 1, random = Math.random()) {
+  console.assert(typeof price_per_cup === 'number', 'price must be a number');
+  console.assert(typeof cups_in_supplies === 'number', 'cups in supplies must be a number');
+  console.assert(Object.values(Weather).includes(weather), 'invalid weather value');
+  console.assert(typeof tasteScore === 'number', 'taste score must be a number');
+  console.assert(typeof random === 'number', 'random must be a number');
+
   const weather_factor = WeatherFactor[weather] || 1.0;
   const ideal_price = IdealPrice[weather] || 0.35
 
-  const sensitivity = 1.5;
-  let price_effect = 1 - (price_per_cup - ideal_price) * sensitivity;
+  let price_effect = 1 - (price_per_cup - ideal_price) * PRICE_SENSITIVITY;
   if (price_effect < 0) {
     price_effect = 0;
   }
 
-  let demand = base_demand * weather_factor * price_effect * tasteScore;
-  demand *= 0.9 + Math.random() * 0.2;
+  let demand = BASE_DEMAND * weather_factor * price_effect * tasteScore;
+  demand *= (1 - DEMAND_VARIANCE / 2) + random * DEMAND_VARIANCE;
 
   const cupsSold = Math.min(Math.floor(demand), cups_in_supplies);
 
@@ -349,19 +332,24 @@ export function calculate_cups_sold(price_per_cup, cups_in_supplies, weather, ta
  * @returns {number} A taste score between 0.5 and 1.2.
  */
 export function calculate_taste_score(lemons_per_cup, sugar_per_cup, ideal_lemons = 1, ideal_sugar = 1) {
+  console.assert(typeof lemons_per_cup === 'number', 'lemons_per_cup must be a number');
+  console.assert(typeof sugar_per_cup === 'number', 'sugar_per_cup must be a number');
+  console.assert(typeof ideal_lemons === 'number', 'ideal_lemons must be a number');
+  console.assert(typeof ideal_sugar === 'number', 'ideal_sugar must be a number');
+
   const lemon_diff = Math.abs(lemons_per_cup - ideal_lemons);
   const sugar_diff = Math.abs(sugar_per_cup - ideal_sugar);
 
   let score = 1.0;
 
   if (lemon_diff === 0 && sugar_diff === 0) {
-    score += 0.2; // perfect recipe bonus
+    score += PERFECT_RECIPE_BONUS;
   } else {
-    score -= (lemon_diff * 0.3 + sugar_diff * 0.2);
+    score -= (lemon_diff * TASTE_PENALTY_LEMON + sugar_diff * TASTE_PENALTY_SUGAR);
   }
 
-  if (score < 0.5) score = 0.5;
-  if (score > 1.2) score = 1.2;
+  if (score < TASTE_SCORE_MIN) score = TASTE_SCORE_MIN;
+  if (score > TASTE_SCORE_MAX) score = TASTE_SCORE_MAX;
 
   return score;
 }
@@ -389,10 +377,18 @@ export function make_lemonade(game_state) {
     ideal.sugar
   );
 
+  // Lemonade requires lemons - can't sell without them in the recipe
+  if (recipe.lemons === 0) {
+    return {
+      ...game_state,
+      cups_sold: 0
+    };
+  }
+
   const cups_available = Math.min(
-    recipe.lemons > 0 ? game_state.supplies.lemons / recipe.lemons : 0,
-    recipe.sugar > 0 ? game_state.supplies.sugar / recipe.sugar : 0,
-    recipe.ice > 0 ? game_state.supplies.ice / recipe.ice : 0,
+    recipe.lemons > 0 ? game_state.supplies.lemons / recipe.lemons : Infinity,
+    recipe.sugar > 0 ? game_state.supplies.sugar / recipe.sugar : Infinity,
+    recipe.ice > 0 ? game_state.supplies.ice / recipe.ice : Infinity,
     game_state.supplies.cups
   );
 
@@ -411,7 +407,8 @@ export function make_lemonade(game_state) {
     ...game_state,
     player_money: game_state.player_money + profit,
     supplies: remaining_supplies,
-    cups_sold
+    cups_sold,
+    total_earnings: game_state.total_earnings + profit
   }
 }
 
@@ -422,6 +419,12 @@ export function make_lemonade(game_state) {
  * @returns {number} The cost to make one cup
  */
 export function calculate_cost_per_cup(game_state, recipe) {
+  console.assert(game_state, 'game_state must be defined');
+  console.assert(recipe, 'recipe must be defined');
+  console.assert(typeof recipe.lemons === 'number', 'recipe.lemons must be a number');
+  console.assert(typeof recipe.sugar === 'number', 'recipe.sugar must be a number');
+  console.assert(typeof recipe.ice === 'number', 'recipe.ice must be a number');
+
   const basePrices = {
     lemons: SupplyPricing.lemons[0].price,
     sugar: SupplyPricing.sugar[0].price,
@@ -437,6 +440,6 @@ export function calculate_cost_per_cup(game_state, recipe) {
 
   return {
     ...game_state,
-    cost_per_cup: Math.round(cost * 100) / 100
+    cost_per_cup: Math.round(cost * 100) / 100,
   }
 }

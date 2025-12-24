@@ -3,7 +3,7 @@
  * Initializes game state, wires up UI events, and coordinates modules.
  */
 
-import { init_game, set_price_per_cup, calculate_supply_cost, calculate_cost_per_cup } from './game.js';
+import { init_game, set_price_per_cup, calculate_supply_cost, calculate_cost_per_cup, make_lemonade, set_weather } from './game.js';
 import { sprites, cups, render, whenSpritesReady } from './canvasController.js';
 import { createReactiveState, updateBindings } from './binding.js';
 
@@ -21,19 +21,38 @@ function updateWeatherIcon() {
   }
 }
 
-// Initial weather icon update
 updateWeatherIcon();
+
+let isAnimating = false;
+
+function animateCupFills(count, onComplete) {
+  let filled = 0;
+  sprites.maker.frameIndex = 1; // Maker active
+  render();
+
+  const interval = setInterval(() => {
+    if (filled < count && filled < cups.length) {
+      cups[filled].fill();
+      render();
+      filled++;
+    } else {
+      clearInterval(interval);
+      sprites.maker.frameIndex = 0; // Maker idle
+      render();
+      onComplete();
+    }
+  }, 400);
+}
+
+function resetCups() {
+  cups.forEach(cup => cup.empty());
+  render();
+}
 
 // Wait for all sprites to load, then render once
 whenSpritesReady(() => {
   render();
-
-  // Example: fill the first cup after 1 second
-  setTimeout(() => {
-    cups[0].fill();
-    sprites.maker.frameIndex = 1;
-    render();
-  }, 1000);
+  resetCups(); // Start with empty cups
 });
 
 // UI Elements
@@ -51,6 +70,8 @@ const priceSaveBtn = document.querySelector('.price_change_save_btn');
 const changeRecipeBtn = document.querySelector('.change_recipe_btn');
 const recipeModal = document.querySelector('.recipe_modal');
 const recipeModalClose = document.querySelector('.recipe_modal_close');
+
+const startDayBtn = document.querySelector('.start_day_btn');
 const recipeSaveBtn = document.querySelector('.recipe_save_btn');
 
 // Shopping modal - quantity inputs and dynamic pricing
@@ -79,12 +100,12 @@ shopBuyBtns.forEach(btn => {
     const input = document.querySelector(`.shop_qty_input[data-item="${item}"]`);
     const qty = parseInt(input.value) || 0;
     const cost = calculate_supply_cost(item, qty);
-    
+
     if (cost > gameState.player_money) {
       alert("Not enough money!");
       return;
     }
-    
+
     setState({
       player_money: gameState.player_money - cost,
       supplies: {
@@ -140,13 +161,13 @@ function updateRecipeCost() {
   const lemons = parseInt(document.querySelector('.recipe_input[data-recipe="lemons"]').value) || 0;
   const sugar = parseInt(document.querySelector('.recipe_input[data-recipe="sugar"]').value) || 0;
   const ice = parseInt(document.querySelector('.recipe_input[data-recipe="ice"]').value) || 0;
-  
+
   // Update breakdown rows
   document.querySelector('.recipe_cost_item[data-cost="lemons"]').textContent = '$' + (lemons * basePrices.lemons).toFixed(2);
   document.querySelector('.recipe_cost_item[data-cost="sugar"]').textContent = '$' + (sugar * basePrices.sugar).toFixed(2);
   document.querySelector('.recipe_cost_item[data-cost="ice"]').textContent = '$' + (ice * basePrices.ice).toFixed(2);
   document.querySelector('.recipe_cost_item[data-cost="cup"]').textContent = '$' + basePrices.cup.toFixed(2);
-  
+
   // Update total
   const result = calculate_cost_per_cup(gameState, { lemons, sugar, ice });
   recipeCostValue.textContent = '$' + result.cost_per_cup.toFixed(2);
@@ -175,7 +196,7 @@ if (changeRecipeBtn) {
     const lemons = parseInt(document.querySelector('.recipe_input[data-recipe="lemons"]').value) || 0;
     const sugar = parseInt(document.querySelector('.recipe_input[data-recipe="sugar"]').value) || 0;
     const ice = parseInt(document.querySelector('.recipe_input[data-recipe="ice"]').value) || 0;
-    
+
     const result = calculate_cost_per_cup(gameState, { lemons, sugar, ice });
     setState({
       recipe: { lemons, sugar, ice },
@@ -183,6 +204,11 @@ if (changeRecipeBtn) {
     });
     recipeModal.classList.remove('open');
   });
+}
+
+// Start Day button
+if (startDayBtn) {
+  startDayBtn.addEventListener('click', startDay);
 }
 
 // Export for debugging in console
@@ -195,4 +221,38 @@ function setState(newState) {
   if (newState.weather) {
     updateWeatherIcon();
   }
+}
+
+function startDay() {
+  if (gameState.supplies.cups <= 0) {
+    alert('You need cups to sell lemonade!');
+    return;
+  }
+
+  const { recipe } = gameState;
+  if (recipe.lemons <= 0 && recipe.sugar <= 0 && recipe.ice <= 0) {
+    alert('Set a recipe with at least one ingredient!');
+    return;
+  }
+
+  if (isAnimating) return; // Prevent double-click
+  isAnimating = true;
+  startDayBtn.disabled = true;
+
+  resetCups();
+
+  const result = make_lemonade(gameState);
+  const cupsSold = result.cups_sold;
+
+  // Animate cup fills
+  animateCupFills(cupsSold, () => {
+    setState(result);
+
+    // Randomize weather for next day
+    const newWeatherState = set_weather(gameState);
+    setState({ weather: newWeatherState.weather });
+
+    isAnimating = false;
+    startDayBtn.disabled = false;
+  });
 }

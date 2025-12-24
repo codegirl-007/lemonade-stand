@@ -605,6 +605,50 @@ canvas {
   box-shadow: 0 2px 0 #3f7a33;
 }
 
+/* Day Section */
+.day_section {
+  text-align: center;
+}
+
+.day_section .section_title {
+  font-size: 28px;
+}
+
+.start_day_btn {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  background: linear-gradient(180deg, #8fd16a 0%, #6bb848 100%);
+  color: #fff;
+  border: 3px solid #3f7a33;
+  border-radius: 12px;
+  padding: 14px 32px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #2d5a24;
+  transition: all 0.1s ease;
+  margin: 12px auto 0;
+  display: block;
+}
+
+.start_day_btn:hover {
+  background: linear-gradient(180deg, #a5e07a 0%, #8fd16a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #2d5a24;
+}
+
+.start_day_btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #2d5a24;
+}
+
+.start_day_btn:disabled {
+  background: linear-gradient(180deg, #ccc 0%, #aaa 100%);
+  border-color: #888;
+  box-shadow: 0 4px 0 #666;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 /* Recipe Modal */
 .recipe_modal {
   display: none;
