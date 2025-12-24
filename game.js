@@ -170,6 +170,7 @@ const WeatherChance = [
  *   cups: PriceTable
  * }} supplies_prices
  * @property {number} cups_sold
+ * @property {number} cost_per_cup
  */
 
 /**
@@ -217,7 +218,8 @@ export function init_game() {
         400: 3.75
       }
     },
-    cups_sold: 0
+    cups_sold: 0,
+    cost_per_cup: 0
   }
 }
 
@@ -410,5 +412,31 @@ export function make_lemonade(game_state) {
     player_money: game_state.player_money + profit,
     supplies: remaining_supplies,
     cups_sold
+  }
+}
+
+/**
+ * Calculate the cost to produce one cup of lemonade based on the recipe.
+ * Uses the base tier pricing for each ingredient.
+ * @param {Object} recipe - The recipe with lemons, sugar, ice amounts
+ * @returns {number} The cost to make one cup
+ */
+export function calculate_cost_per_cup(game_state, recipe) {
+  const basePrices = {
+    lemons: SupplyPricing.lemons[0].price,
+    sugar: SupplyPricing.sugar[0].price,
+    ice: SupplyPricing.ice[0].price,
+    cup: SupplyPricing.cups[0].price
+  };
+
+  const cost =
+    (recipe.lemons * basePrices.lemons) +
+    (recipe.sugar * basePrices.sugar) +
+    (recipe.ice * basePrices.ice) +
+    basePrices.cup;
+
+  return {
+    ...game_state,
+    cost_per_cup: Math.round(cost * 100) / 100
   }
 }

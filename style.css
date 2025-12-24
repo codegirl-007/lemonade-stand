@@ -674,6 +674,45 @@ canvas {
   text-align: center;
 }
 
+.recipe_cost_breakdown {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin: 16px 0;
+}
+
+.recipe_cost_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #7A6146;
+  padding: 4px 0;
+}
+
+.recipe_cost_row.total {
+  border-top: 1px solid #d4c9b8;
+  margin-top: 8px;
+  padding-top: 10px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #5C4632;
+}
+
+.recipe_cost_item {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+}
+
+.recipe_cost_value {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #3f7a33;
+}
+
 .recipe_save_btn {
   font-family: 'Fredoka', sans-serif;
   font-size: 16px;

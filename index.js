@@ -3,7 +3,7 @@
  * Initializes game state, wires up UI events, and coordinates modules.
  */
 
-import { init_game, set_price_per_cup, calculate_supply_cost } from './game.js';
+import { init_game, set_price_per_cup, calculate_supply_cost, calculate_cost_per_cup } from './game.js';
 import { sprites, cups, render, whenSpritesReady } from './canvasController.js';
 import { createReactiveState, updateBindings } from './binding.js';
 
@@ -130,12 +130,40 @@ if (changePriceBtn) {
 }
 
 // Recipe modal handlers
+const recipeInputs = document.querySelectorAll('.recipe_input');
+const recipeCostValue = document.querySelector('.recipe_cost_value');
+
+// Base prices for cost breakdown (matches SupplyPricing tier 1 in game.js)
+const basePrices = { lemons: 0.02, sugar: 0.01, ice: 0.01, cup: 0.01 };
+
+function updateRecipeCost() {
+  const lemons = parseInt(document.querySelector('.recipe_input[data-recipe="lemons"]').value) || 0;
+  const sugar = parseInt(document.querySelector('.recipe_input[data-recipe="sugar"]').value) || 0;
+  const ice = parseInt(document.querySelector('.recipe_input[data-recipe="ice"]').value) || 0;
+  
+  // Update breakdown rows
+  document.querySelector('.recipe_cost_item[data-cost="lemons"]').textContent = '$' + (lemons * basePrices.lemons).toFixed(2);
+  document.querySelector('.recipe_cost_item[data-cost="sugar"]').textContent = '$' + (sugar * basePrices.sugar).toFixed(2);
+  document.querySelector('.recipe_cost_item[data-cost="ice"]').textContent = '$' + (ice * basePrices.ice).toFixed(2);
+  document.querySelector('.recipe_cost_item[data-cost="cup"]').textContent = '$' + basePrices.cup.toFixed(2);
+  
+  // Update total
+  const result = calculate_cost_per_cup(gameState, { lemons, sugar, ice });
+  recipeCostValue.textContent = '$' + result.cost_per_cup.toFixed(2);
+}
+
+// Update cost when recipe inputs change
+recipeInputs.forEach(input => {
+  input.addEventListener('input', updateRecipeCost);
+});
+
 if (changeRecipeBtn) {
   changeRecipeBtn.addEventListener('click', () => {
     // Set inputs to current recipe values
     document.querySelector('.recipe_input[data-recipe="lemons"]').value = gameState.recipe.lemons;
     document.querySelector('.recipe_input[data-recipe="sugar"]').value = gameState.recipe.sugar;
     document.querySelector('.recipe_input[data-recipe="ice"]').value = gameState.recipe.ice;
+    updateRecipeCost();
     recipeModal.classList.add('open');
   });
 
@@ -148,8 +176,10 @@ if (changeRecipeBtn) {
     const sugar = parseInt(document.querySelector('.recipe_input[data-recipe="sugar"]').value) || 0;
     const ice = parseInt(document.querySelector('.recipe_input[data-recipe="ice"]').value) || 0;
     
+    const result = calculate_cost_per_cup(gameState, { lemons, sugar, ice });
     setState({
-      recipe: { lemons, sugar, ice }
+      recipe: { lemons, sugar, ice },
+      cost_per_cup: result.cost_per_cup
     });
     recipeModal.classList.remove('open');
   });
