@@ -22,7 +22,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
   gap: 10px;
 }
 
@@ -894,7 +894,7 @@ canvas {
     font-size: 36px;
   }
 
-  .game_section > p {
+  .game_section>p {
     font-size: 22px;
   }
 
