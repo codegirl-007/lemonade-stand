@@ -96,7 +96,7 @@ body {
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   color: #7A6146;
-  padding: 8px 12px;
+  padding: 8px 4px;
   margin-bottom: 4px;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 8px;
@@ -117,8 +117,8 @@ body {
   font-family: 'Fredoka', sans-serif;
   font-size: 18px;
   font-weight: 600;
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
   border-radius: 6px;
   border: 2px solid #c5e8a8;
   background: linear-gradient(180deg, #fff 0%, #f5f5f0 100%);
