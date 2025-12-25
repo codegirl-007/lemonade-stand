@@ -134,19 +134,8 @@ const goShoppingBtn = document.querySelector('.go_shopping_btn');
 const shoppingModal = document.querySelector('.shopping_modal');
 const shoppingModalClose = document.querySelector('.shopping_modal_close');
 
-const changePriceBtn = document.querySelector('.change_price_button');
-const priceModal = document.querySelector('.price_change_modal');
-const priceModalClose = document.querySelector('.price_change_modal_close');
-const priceInput = document.querySelector('.price_input');
-
-const priceSaveBtn = document.querySelector('.price_change_save_btn');
-
-const changeRecipeBtn = document.querySelector('.change_recipe_btn');
-const recipeModal = document.querySelector('.recipe_modal');
-const recipeModalClose = document.querySelector('.recipe_modal_close');
-
+const priceInlineInput = document.querySelector('.price_inline_input');
 const startDayBtn = document.querySelector('.start_day_btn');
-const recipeSaveBtn = document.querySelector('.recipe_save_btn');
 
 // Shopping modal - quantity inputs and dynamic pricing
 const shopQtyInputs = document.querySelectorAll('.shop_qty_input');
@@ -203,87 +192,53 @@ if (goShoppingBtn) {
   })
 }
 
-if (changePriceBtn) {
-  changePriceBtn.addEventListener('click', () => {
-
-    priceModal.classList.add('open');
-    priceInput.focus();
-    const priceInputLength = priceInput.value.length;
-
-    priceInput.setSelectionRange(priceInputLength, priceInputLength);
-  });
-
-  priceModalClose.addEventListener('click', () => {
-    priceModal.classList.remove('open');
-  });
-
-  priceSaveBtn.addEventListener('click', () => {
-    const newState = set_price_per_cup(gameState, Number(priceInput.value));
+// Inline price editing
+if (priceInlineInput) {
+  // Save price on blur or Enter
+  function savePrice() {
+    const value = parseFloat(priceInlineInput.value) || 0;
+    const newState = set_price_per_cup(gameState, value);
     setState(newState);
-    priceModal.classList.remove('open');
-  })
-}
+    priceInlineInput.value = gameState.price_per_cup.toFixed(2);
+  }
 
-// Recipe modal handlers
-const recipeInputs = document.querySelectorAll('.recipe_input');
-const recipeCostValue = document.querySelector('.recipe_cost_value');
-
-// Base prices for cost breakdown (matches SupplyPricing tier 1 in game.js)
-const basePrices = { lemons: 0.02, sugar: 0.01, ice: 0.01, cup: 0.01 };
-
-function updateRecipeCost() {
-  const lemons = parseInt(document.querySelector('.recipe_input[data-recipe="lemons"]').value) || 0;
-  const sugar = parseInt(document.querySelector('.recipe_input[data-recipe="sugar"]').value) || 0;
-  const ice = parseInt(document.querySelector('.recipe_input[data-recipe="ice"]').value) || 0;
-
-  // Update breakdown rows
-  document.querySelector('.recipe_cost_item[data-cost="lemons"]').textContent = '$' + (lemons * basePrices.lemons).toFixed(2);
-  document.querySelector('.recipe_cost_item[data-cost="sugar"]').textContent = '$' + (sugar * basePrices.sugar).toFixed(2);
-  document.querySelector('.recipe_cost_item[data-cost="ice"]').textContent = '$' + (ice * basePrices.ice).toFixed(2);
-  document.querySelector('.recipe_cost_item[data-cost="cup"]').textContent = '$' + basePrices.cup.toFixed(2);
-
-  // Update total
-  const result = calculate_cost_per_cup(gameState, { lemons, sugar, ice });
-  recipeCostValue.textContent = '$' + result.cost_per_cup.toFixed(2);
-}
-
-// Update cost when recipe inputs change
-recipeInputs.forEach(input => {
-  input.addEventListener('input', updateRecipeCost);
-});
-
-if (changeRecipeBtn) {
-  changeRecipeBtn.addEventListener('click', () => {
-    // Set inputs to current recipe values
-    document.querySelector('.recipe_input[data-recipe="lemons"]').value = gameState.recipe.lemons;
-    document.querySelector('.recipe_input[data-recipe="sugar"]').value = gameState.recipe.sugar;
-    document.querySelector('.recipe_input[data-recipe="ice"]').value = gameState.recipe.ice;
-    updateRecipeCost();
-    recipeModal.classList.add('open');
+  priceInlineInput.addEventListener('blur', savePrice);
+  priceInlineInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      priceInlineInput.blur();
+    }
   });
 
-  recipeModalClose.addEventListener('click', () => {
-    recipeModal.classList.remove('open');
+  // Select all text on focus for easy editing
+  priceInlineInput.addEventListener('focus', () => {
+    priceInlineInput.select();
   });
 
-  recipeSaveBtn.addEventListener('click', () => {
-    const lemons = parseInt(document.querySelector('.recipe_input[data-recipe="lemons"]').value) || 0;
-    const sugar = parseInt(document.querySelector('.recipe_input[data-recipe="sugar"]').value) || 0;
-    const ice = parseInt(document.querySelector('.recipe_input[data-recipe="ice"]').value) || 0;
-
-    const result = calculate_cost_per_cup(gameState, { lemons, sugar, ice });
-    setState({
-      recipe: { lemons, sugar, ice },
-      cost_per_cup: result.cost_per_cup
-    });
-    recipeModal.classList.remove('open');
-  });
+  // Initialize with current value
+  priceInlineInput.value = gameState.price_per_cup.toFixed(2);
 }
 
 // Start Day button
 if (startDayBtn) {
   startDayBtn.addEventListener('click', startDay);
 }
+
+// Recipe stepper buttons
+document.querySelectorAll('.stepper_btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const ingredient = btn.dataset.ingredient;
+    const isPlus = btn.classList.contains('stepper_plus');
+    const currentValue = gameState.recipe[ingredient];
+    const newValue = isPlus ? currentValue + 1 : Math.max(0, currentValue - 1);
+    
+    const newRecipe = { ...gameState.recipe, [ingredient]: newValue };
+    const result = calculate_cost_per_cup(gameState, newRecipe);
+    setState({
+      recipe: newRecipe,
+      cost_per_cup: result.cost_per_cup
+    });
+  });
+});
 
 // Export for debugging in console
 window.gameState = gameState;

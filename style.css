@@ -11,7 +11,10 @@ body {
 .game_header {
   display: flex;
   margin: 0 auto;
-  width: 500px;
+  max-width: 500px;
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
   align-items: center;
 }
 
@@ -94,6 +97,94 @@ body {
 
 .game_list li:last-child {
   margin-bottom: 0;
+}
+
+/* Recipe stepper buttons */
+.recipe_stepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stepper_btn {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 2px solid #c5e8a8;
+  background: linear-gradient(180deg, #fff 0%, #f5f5f0 100%);
+  color: #5C4632;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+  padding: 0;
+  line-height: 1;
+}
+
+.stepper_btn:hover {
+  border-color: #8fd16a;
+  background: linear-gradient(180deg, #f0ffe0 0%, #e5f5d5 100%);
+}
+
+.stepper_btn:active {
+  transform: scale(0.95);
+}
+
+.stepper_value {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #5C4632;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* Inline editable price */
+.price_editable {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 12px 0;
+}
+
+.price_editable .price_currency {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #5C4632;
+  margin-right: 2px;
+}
+
+.price_inline_input {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #5C4632;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 4px 8px;
+  width: 80px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.price_inline_input:hover {
+  background: rgba(143, 209, 106, 0.15);
+  border-color: #c5e8a8;
+}
+
+.price_inline_input:focus {
+  outline: none;
+  background: #fff;
+  border-color: #8fd16a;
+  cursor: text;
+  box-shadow: 0 0 0 3px rgba(143, 209, 106, 0.25);
 }
 
 .game_list li span {
@@ -185,8 +276,8 @@ body {
 }
 
 canvas {
-  width: 1200px;
-  height: 500px;
+  max-width: 100%;
+  height: auto;
   margin: 0 auto;
   display: block;
   pointer-events: none;
@@ -795,4 +886,19 @@ canvas {
 .recipe_save_btn:active {
   transform: translateY(2px);
   box-shadow: 0 2px 0 #3f7a33;
+}
+
+/* Responsive adjustments for tablets */
+@media (max-width: 768px) {
+  .game_header_title {
+    font-size: 36px;
+  }
+
+  .game_section > p {
+    font-size: 22px;
+  }
+
+  .dashboard {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
 }

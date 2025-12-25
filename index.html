@@ -40,21 +40,42 @@
       <h2 class="section_title">Recipe</h2>
       <p class="section_hint">Per cup of lemonade</p>
 
-      <ul class="game_list">
-        <li>Lemons: <span data-bind="recipe.lemons">0</span></li>
-        <li>Sugar: <span data-bind="recipe.sugar">0</span></li>
-        <li>Ice: <span data-bind="recipe.ice">0</span></li>
+      <ul class="game_list recipe_list">
+        <li>
+          <span>Lemons</span>
+          <div class="recipe_stepper">
+            <button class="stepper_btn stepper_minus" data-ingredient="lemons">−</button>
+            <span class="stepper_value" data-bind="recipe.lemons">0</span>
+            <button class="stepper_btn stepper_plus" data-ingredient="lemons">+</button>
+          </div>
+        </li>
+        <li>
+          <span>Sugar</span>
+          <div class="recipe_stepper">
+            <button class="stepper_btn stepper_minus" data-ingredient="sugar">−</button>
+            <span class="stepper_value" data-bind="recipe.sugar">0</span>
+            <button class="stepper_btn stepper_plus" data-ingredient="sugar">+</button>
+          </div>
+        </li>
+        <li>
+          <span>Ice</span>
+          <div class="recipe_stepper">
+            <button class="stepper_btn stepper_minus" data-ingredient="ice">−</button>
+            <span class="stepper_value" data-bind="recipe.ice">0</span>
+            <button class="stepper_btn stepper_plus" data-ingredient="ice">+</button>
+          </div>
+        </li>
       </ul>
-
-      <button class="change_recipe_btn">Change Recipe</button>
     </section>
 
     <section class="game_section">
       <h2 class="section_title">Current Price</h2>
+      <p class="section_hint">Click to edit</p>
 
-      <p data-bind="price_per_cup" data-format="currency"></p>
-
-      <button class="change_price_button">Change Price</button>
+      <div class="price_editable">
+        <span class="price_currency">$</span>
+        <input type="text" class="price_inline_input" inputmode="decimal" value="0.00">
+      </div>
     </section>
 
     <section class="game_section day_section">
@@ -123,73 +144,6 @@
           <span class="shop_item_price" data-price="cups">$0.25</span>
           <button class="shop_item_btn" data-item="cups">Buy</button>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="price_change_modal">
-    <div class="price_change_modal_content">
-      <div class="price_change_modal_header">
-        <h2 class="price_change_modal_title">Set Your Price</h2>
-        <button class="price_change_modal_close">&times;</button>
-      </div>
-      <div class="price_change_modal_body">
-        <p class="price_change_hint">Choose how much to charge per cup of lemonade.</p>
-        <div class="price_input_group">
-          <span class="price_currency">$</span>
-          <input type="text" class="price_input" inputmode="decimal">
-        </div>
-        <button class="price_change_save_btn">Save Price</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="recipe_modal">
-    <div class="recipe_modal_content">
-      <div class="recipe_modal_header">
-        <h2 class="recipe_modal_title">Set Your Recipe</h2>
-        <button class="recipe_modal_close">&times;</button>
-      </div>
-      <div class="recipe_modal_body">
-        <p class="recipe_modal_hint">Ingredients per cup of lemonade</p>
-        <div class="recipe_grid">
-          <div class="recipe_item">
-            <label class="recipe_label">Lemons</label>
-            <input type="number" class="recipe_input" data-recipe="lemons" min="0" max="10" value="1">
-          </div>
-          <div class="recipe_item">
-            <label class="recipe_label">Sugar</label>
-            <input type="number" class="recipe_input" data-recipe="sugar" min="0" max="10" value="1">
-          </div>
-          <div class="recipe_item">
-            <label class="recipe_label">Ice</label>
-            <input type="number" class="recipe_input" data-recipe="ice" min="0" max="10" value="3">
-          </div>
-        </div>
-        <div class="recipe_cost_breakdown">
-          <h3 class="cost_breakdown">Cost Breakdown</h3>
-          <div class="recipe_cost_row">
-            <span>Lemons</span>
-            <span class="recipe_cost_item" data-cost="lemons">$0.00</span>
-          </div>
-          <div class="recipe_cost_row">
-            <span>Sugar</span>
-            <span class="recipe_cost_item" data-cost="sugar">$0.00</span>
-          </div>
-          <div class="recipe_cost_row">
-            <span>Ice</span>
-            <span class="recipe_cost_item" data-cost="ice">$0.00</span>
-          </div>
-          <div class="recipe_cost_row">
-            <span>Cup</span>
-            <span class="recipe_cost_item" data-cost="cup">$0.01</span>
-          </div>
-          <div class="recipe_cost_row total">
-            <span>Total per cup</span>
-            <span class="recipe_cost_value">$0.00</span>
-          </div>
-        </div>
-        <button class="recipe_save_btn">Save Recipe</button>
       </div>
     </div>
   </div>
