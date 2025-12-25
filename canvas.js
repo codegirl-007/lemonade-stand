@@ -4,6 +4,7 @@
  */
 
 /** @type {HTMLCanvasElement} */
+const document = window.document;
 export const canvas = document.getElementById('scene');
 
 /** @type {CanvasRenderingContext2D} */
