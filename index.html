@@ -12,12 +12,6 @@
 <body>
 
   <div class="dashboard">
-    <section class="game_section weather_section">
-      <h2 class="section_title">Weather</h2>
-      <img class="weather_icon" src="sunny.png" alt="Weather">
-      <p class="weather_label" data-bind="weather">sunny</p>
-    </section>
-
     <section class="game_section">
       <h2 class="section_title">Supplies</h2>
 
@@ -75,9 +69,14 @@
     </section>
 
     <section class="game_section day_section">
-      <h2 class="section_title">Game</h2>
-      <p class="section_hint">Cups sold: <span data-bind="cups_sold">0</span></p>
-      <p class="section_hint">Earnings: <span data-bind="total_earnings" data-format="currency">$0.00</span></p>
+      <div class="weather_display">
+        <img class="weather_icon" src="sunny.png" alt="Weather">
+        <p class="weather_label" data-bind="weather">sunny</p>
+      </div>
+      <div class="game_stats">
+        <p class="section_hint">Cups sold: <span data-bind="cups_sold">0</span></p>
+        <p class="section_hint">Earnings: <span data-bind="total_earnings" data-format="currency">$0.00</span></p>
+      </div>
       <button class="start_day_btn">Start Day</button>
     </section>
   </div>

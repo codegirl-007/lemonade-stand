@@ -54,26 +54,33 @@ body {
   margin-top: auto;
 }
 
-/* Weather Section */
-.weather_section {
-  text-align: center;
+/* Weather display in game section */
+.weather_display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
 .weather_icon {
-  width: 80px;
-  height: 80px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
-  margin: 8px auto;
-  display: block;
 }
 
 .weather_label {
   font-family: 'Fredoka', sans-serif;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 20px;
+  font-weight: 600;
   color: #5C4632;
   text-transform: capitalize;
   margin: 0;
+}
+
+.game_stats {
+  text-align: center;
+  margin-bottom: 8px;
 }
 
 .game_list {
@@ -204,7 +211,7 @@ body {
 }
 
 .game_section .section_hint {
-  font-size: 13px;
+  font-size: 15px;
   margin: 2px 0 8px;
 }
 
